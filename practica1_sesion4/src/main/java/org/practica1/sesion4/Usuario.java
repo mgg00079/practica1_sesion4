@@ -2,6 +2,8 @@ package org.practica1.sesion4;
 
 import java.io.Serializable;
 
+
+//UsuarioDTO
 public class Usuario implements Serializable{
 
 	private static final long serialVersionUID = 1L;
