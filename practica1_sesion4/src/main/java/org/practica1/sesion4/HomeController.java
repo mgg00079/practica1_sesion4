@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,35 +29,65 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-		
+	
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String requestmapping(Model model) {
+		return "home";
+	}
+	
+	
+
+	
 	@RequestMapping(value = "/ListaUsuarios", method = RequestMethod.POST)
-	public class ListaUsuarios extends HttpServlet {
-		private static final long serialVersionUID = 1L;
+	
+		public String listausuarios(Model model) {
 		
-		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			// TODO Auto-generated method stub
-			String login = request.getParameter("name");
-			String password = request.getParameter("pass");
+			//String login = request.getParameter("name");
+			//String password = request.getParameter("pass");
 			
 			ArrayList<Usuario> usuarios = new ArrayList<Usuario> ();
+			
 			Usuario user1 = new Usuario ("Manuel","Casquel Orzaes", "maco0007@ujaen.es", "123456789", "23005");
 			Usuario user2 = new Usuario ("Marta","Gonzalez Gonzalez","mgg00079@ujaen.es", "789456123", "23006");
+			
 			usuarios.add(user1);
 			usuarios.add(user2);
-			request.setAttribute("usuarios", usuarios);
-			
-			if (login.equals("servicios") && password.equals("servicios")) {
-				String url="/listausuarios.jsp";
-				getServletContext().getRequestDispatcher(url).forward(request, response);
-			}
-			else {
-				String url="/Sesion";
-				getServletContext().getRequestDispatcher(url).forward(request, response);
-			}
-			
+	
+			usuarios=dao.buscaUsuario(usuarios); //En UsuarioDaoJdbc implemento la parte donde comprueba el login.
+			return "home"; //Aquí no sabía qué poner, porque los returns según el login están en buscausuario (tampoco sé si está bien).
 		}
-
-	}
+			
+		@Autowired
+		private UsuarioDaoInterface dao;
+		/**	
+		    public class ListaUsuarios extends HttpServlet {
+				private static final long serialVersionUID = 1L;
+			    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+				// TODO Auto-generated method stub
+				
+			    	String login = request.getParameter("name");
+					String password = request.getParameter("pass");
+				
+					ArrayList<Usuario> usuarios = new ArrayList<Usuario> ();
+					Usuario user1 = new Usuario ("Manuel","Casquel Orzaes", "maco0007@ujaen.es", "123456789", "23005");
+					Usuario user2 = new Usuario ("Marta","Gonzalez Gonzalez","mgg00079@ujaen.es", "789456123", "23006");
+					usuarios.add(user1);
+					usuarios.add(user2);
+					request.setAttribute("usuarios", usuarios);
+					
+					if (login.equals("servicios") && password.equals("servicios")) {
+						String url="/listausuarios.jsp";
+						getServletContext().getRequestDispatcher(url).forward(request, response);		
+					}
+					else {
+						String url="/Sesion";
+						getServletContext().getRequestDispatcher(url).forward(request, response);
+					}				
+							
+			
+				}
+			}**/
 	
 	@RequestMapping(value = "/Sesion", method = RequestMethod.POST)
 	public class Sesion extends HttpServlet {
