@@ -41,7 +41,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/ListaUsuarios", method = RequestMethod.POST)
 	
-		public String listausuarios(Model model) {
+		public void listausuarios(Model model) { //Si hago los return en buscausuario, aquí sería void, puesto que no devuelvo nada??
 		
 			//String login = request.getParameter("name");
 			//String password = request.getParameter("pass");
@@ -55,42 +55,61 @@ public class HomeController {
 			usuarios.add(user2);
 	
 			usuarios=dao.buscaUsuario(usuarios); //En UsuarioDaoJdbc implemento la parte donde comprueba el login.
-			return "home"; //Aquí no sabía qué poner, porque los returns según el login están en buscausuario (tampoco sé si está bien).
+			//return "home"; //Aquí no sabía qué poner, porque los returns según el login están en buscausuario (tampoco sé si está bien).
 		}
 			
 		@Autowired
 		private UsuarioDaoInterface dao;
-		/**	
-		    public class ListaUsuarios extends HttpServlet {
-				private static final long serialVersionUID = 1L;
-			    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-				// TODO Auto-generated method stub
-				
-			    	String login = request.getParameter("name");
-					String password = request.getParameter("pass");
-				
-					ArrayList<Usuario> usuarios = new ArrayList<Usuario> ();
-					Usuario user1 = new Usuario ("Manuel","Casquel Orzaes", "maco0007@ujaen.es", "123456789", "23005");
-					Usuario user2 = new Usuario ("Marta","Gonzalez Gonzalez","mgg00079@ujaen.es", "789456123", "23006");
-					usuarios.add(user1);
-					usuarios.add(user2);
-					request.setAttribute("usuarios", usuarios);
-					
-					if (login.equals("servicios") && password.equals("servicios")) {
-						String url="/listausuarios.jsp";
-						getServletContext().getRequestDispatcher(url).forward(request, response);		
-					}
-					else {
-						String url="/Sesion";
-						getServletContext().getRequestDispatcher(url).forward(request, response);
-					}				
-							
-			
-				}
-			}**/
+		
 	
 	@RequestMapping(value = "/Sesion", method = RequestMethod.POST)
-	public class Sesion extends HttpServlet {
+	public String sesion(Model model, HttpServletRequest request, HttpServletResponse response) {
+		
+		String nom = null;
+		String ape = null;
+		String ema = null;
+		String tel = null;
+		String cod = null;
+
+		HttpSession session = request.getSession(true); //En caso de que no exista la sesion, la crea.
+		session.setMaxInactiveInterval(60); //El valor es en segundos.
+		response.setContentType("text/html");
+		
+		nom=request.getParameter("nombre");
+		ape=request.getParameter("apellidos");
+		ema=request.getParameter("useremail");
+		tel=request.getParameter("telefono");
+		cod=request.getParameter("codpost");
+		
+		Usuario usuario = (Usuario)session.getAttribute("usuario");
+		String url ="";
+		
+		if (usuario == null) {
+			if(nom == null && ape == null && ema == null && tel == null && cod == null) {
+				url = "/registro.html";
+				getServletContext().getRequestDispatcher(url).forward(request, response);
+			}
+			else {
+				
+				Usuario user = new Usuario(nom, ape, ema, tel, cod);
+				request.setAttribute("usuario", user);
+				session.setAttribute("usuario", user);
+				url = "/registro.jsp";
+				getServletContext().getRequestDispatcher(url).forward(request, response);
+			}
+		}
+		else {
+			url = "/registro.jsp";
+			getServletContext().getRequestDispatcher(url).forward(request, response);
+		}
+		
+		
+		return "home";
+		
+	}
+	
+	
+	/**public class Sesion extends HttpServlet {
 		private static final long serialVersionUID = 1L;
 		
 		private String nom = null;
@@ -136,5 +155,37 @@ public class HomeController {
 			}
 		}
 	}
-	//return "home";
+	**/
 }
+
+
+
+
+/**	
+public class ListaUsuarios extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	// TODO Auto-generated method stub
+	
+    	String login = request.getParameter("name");
+		String password = request.getParameter("pass");
+	
+		ArrayList<Usuario> usuarios = new ArrayList<Usuario> ();
+		Usuario user1 = new Usuario ("Manuel","Casquel Orzaes", "maco0007@ujaen.es", "123456789", "23005");
+		Usuario user2 = new Usuario ("Marta","Gonzalez Gonzalez","mgg00079@ujaen.es", "789456123", "23006");
+		usuarios.add(user1);
+		usuarios.add(user2);
+		request.setAttribute("usuarios", usuarios);
+		
+		if (login.equals("servicios") && password.equals("servicios")) {
+			String url="/listausuarios.jsp";
+			getServletContext().getRequestDispatcher(url).forward(request, response);		
+		}
+		else {
+			String url="/Sesion";
+			getServletContext().getRequestDispatcher(url).forward(request, response);
+		}				
+				
+
+	}
+}**/
