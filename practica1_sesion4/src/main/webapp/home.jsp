@@ -10,7 +10,7 @@
 <%--Esto es index.html--%>
 	
 	<h2>Login de usuario</h2>
-	<form action="ListaUsuarios" method="post">
+	<form action="Login" method="post">
 		Nombre de usuario: <br /><input type="text" name="name" size="20" required><br />
 		Contraseña: <br /><input type="password" name="pass" size="10" required><br />
 		<input type="submit" value="Enviar">

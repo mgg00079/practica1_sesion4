@@ -14,18 +14,18 @@ public class UsuarioDaoJdbc implements UsuarioDaoInterface {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
-	public String buscaUsuario(String login, String password) { //Comprueba si el usuario es admin, si no lo es, redirecciona al registro.
-		
-		String sql = "select * from usuarios where id = ?";
-		//Object[] parametros = {id}; //Array de objetos.
-		UsuarioMapper mapper = new UsuarioMapper();
-		List<Usuario> usuarios = this.jdbcTemplate.query(sql, mapper);
-		
-		if (login.equals("servicios") && password.equals("servicios")) return "listausuarios";
-		else return "registrosesion";
-		
-	}
 	
+	//Método listar usuarios:
+	public List<DtoUsuario> NombreUsuario(String user){
+		String sql = "select * from usuarios where user = ?";
+		Object[] param = {user}; //Array de objetos.
+		UsuarioMapper mapper = new UsuarioMapper();
+		List<DtoUsuario> nombreusuarios = this.jdbcTemplate.query(sql, param, mapper);
+		
+		return nombreusuarios;
+	}
+
+/*
 	public void creaTabla() {
 		this.jdbcTemplate.execute("create table usuarios (nombre String, apellidos String, email String, telefono String, codigopostal String)");
 	}
@@ -43,6 +43,6 @@ public class UsuarioDaoJdbc implements UsuarioDaoInterface {
 		List<Usuario> usuarios = this.jdbcTemplate.query(sql, mapper);
 		return usuarios;
 	}
-
+*/
 
 }

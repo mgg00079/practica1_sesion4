@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 //UsuarioDTO
-public class Usuario implements Serializable{
+public class DtoUsuario implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private String nombre;
@@ -13,7 +13,7 @@ public class Usuario implements Serializable{
 	private String telefono;
 	private String cp;
 	
-	public Usuario () {
+	public DtoUsuario () {
 		nombre="";
 		apellidos="";
 		email="";
@@ -21,7 +21,7 @@ public class Usuario implements Serializable{
 		cp="";
 	}
 	
-	public Usuario(String nombre, String apellidos, String email, String telefono, String cp) {
+	public DtoUsuario(String nombre, String apellidos, String email, String telefono, String cp) {
 		this.nombre=nombre;
 		this.apellidos=apellidos;
 		this.email=email;
